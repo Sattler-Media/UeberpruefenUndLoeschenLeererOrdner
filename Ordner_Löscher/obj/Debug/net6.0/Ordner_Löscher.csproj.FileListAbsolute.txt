@@ -1,0 +1,15 @@
+C:\Users\adrian.maldonado\Documents\C#\Ordner_Löscher\bin\Debug\net6.0\Ordner_Löscher.exe
+C:\Users\adrian.maldonado\Documents\C#\Ordner_Löscher\bin\Debug\net6.0\Ordner_Löscher.deps.json
+C:\Users\adrian.maldonado\Documents\C#\Ordner_Löscher\bin\Debug\net6.0\Ordner_Löscher.runtimeconfig.json
+C:\Users\adrian.maldonado\Documents\C#\Ordner_Löscher\bin\Debug\net6.0\Ordner_Löscher.dll
+C:\Users\adrian.maldonado\Documents\C#\Ordner_Löscher\bin\Debug\net6.0\Ordner_Löscher.pdb
+C:\Users\adrian.maldonado\Documents\C#\Ordner_Löscher\obj\Debug\net6.0\Ordner_Löscher.csproj.AssemblyReference.cache
+C:\Users\adrian.maldonado\Documents\C#\Ordner_Löscher\obj\Debug\net6.0\Ordner_Löscher.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\adrian.maldonado\Documents\C#\Ordner_Löscher\obj\Debug\net6.0\Ordner_Löscher.AssemblyInfoInputs.cache
+C:\Users\adrian.maldonado\Documents\C#\Ordner_Löscher\obj\Debug\net6.0\Ordner_Löscher.AssemblyInfo.cs
+C:\Users\adrian.maldonado\Documents\C#\Ordner_Löscher\obj\Debug\net6.0\Ordner_Löscher.csproj.CoreCompileInputs.cache
+C:\Users\adrian.maldonado\Documents\C#\Ordner_Löscher\obj\Debug\net6.0\Ordner_Löscher.dll
+C:\Users\adrian.maldonado\Documents\C#\Ordner_Löscher\obj\Debug\net6.0\refint\Ordner_Löscher.dll
+C:\Users\adrian.maldonado\Documents\C#\Ordner_Löscher\obj\Debug\net6.0\Ordner_Löscher.pdb
+C:\Users\adrian.maldonado\Documents\C#\Ordner_Löscher\obj\Debug\net6.0\Ordner_Löscher.genruntimeconfig.cache
+C:\Users\adrian.maldonado\Documents\C#\Ordner_Löscher\obj\Debug\net6.0\ref\Ordner_Löscher.dll
