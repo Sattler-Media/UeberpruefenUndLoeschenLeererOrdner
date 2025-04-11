@@ -1,76 +1,122 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
+using System.Windows.Forms;
 
-class Program
+class Program : Form
 {
-    static void Main()
+    private ProgressBar progressBar;
+    private Label statusLabel;
+    private Button startButton;
+
+    public Program()
     {
-        // Pfad des Hauptverzeichnisses, das überprüft werden soll
-        string hauptOrdner = @"C:\Users\adrian.maldonado\Documents\C#\Bla";  // Passe diesen Pfad an dein System an
+        
+        this.Text = "Ordner-Löschen Progress:";
+        this.Size = new System.Drawing.Size(400, 200);
+
+        
+        progressBar = new ProgressBar();
+        progressBar.Location = new System.Drawing.Point(50, 50);
+        progressBar.Size = new System.Drawing.Size(300, 30);
+        progressBar.Minimum = 0;
+        progressBar.Maximum = 100;
+        this.Controls.Add(progressBar);
+
+        
+        statusLabel = new Label();
+        statusLabel.Location = new System.Drawing.Point(50, 100);
+        statusLabel.Size = new System.Drawing.Size(300, 30);
+        statusLabel.Text = "Zum beginnen bitte drücken.";
+        this.Controls.Add(statusLabel);
+
+        
+        startButton = new Button();
+        startButton.Text = "Beginn";
+        startButton.Location = new System.Drawing.Point(150, 140);
+        startButton.Click += StartButton_Click;
+        this.Controls.Add(startButton);
+    }
+
+    private void StartButton_Click(object sender, EventArgs e)
+    {
+        string hauptOrdner = @"C:\Users\adrian.maldonado\Documents\C#\Bla"; 
 
         if (Directory.Exists(hauptOrdner))
         {
-            // Aufruf der Funktion, um leere Ordner zu überprüfen und zu löschen
-            UeberpruefenUndLoeschenLeererOrdner(hauptOrdner);
+            Thread processThread = new Thread(() => UeberpruefenUndLoeschenLeererOrdner(hauptOrdner));
+            processThread.Start();
         }
         else
         {
-            Console.WriteLine($"Das Verzeichnis {hauptOrdner} existiert nicht.");
+            MessageBox.Show($"Der Ordner {hauptOrdner} Existiert nicht.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
-    static void UeberpruefenUndLoeschenLeererOrdner(string verzeichnis)
+    private void UeberpruefenUndLoeschenLeererOrdner(string verzeichnis)
     {
         try
         {
-            // Alle Unterordner im angegebenen Verzeichnis abrufen
             string[] unterordner = Directory.GetDirectories(verzeichnis);
+            int totalItems = unterordner.Length + 1; 
 
             foreach (string unterordnerPfad in unterordner)
             {
-                // Rekursiv alle Unterordner im aktuellen Unterordner überprüfen
                 UeberpruefenUndLoeschenLeererOrdner(unterordnerPfad);
+                processedItems++;
+                UpdateProgress(processedItems, totalItems);
             }
 
-            // Alle Dateien im aktuellen Verzeichnis abrufen
             string[] dateien = Directory.GetFiles(verzeichnis);
             string[] unterordnerInnen = Directory.GetDirectories(verzeichnis);
 
             if (dateien.Length == 0 && unterordnerInnen.Length == 0)
             {
-                // Leeren Ordner löschen
                 Directory.Delete(verzeichnis);
-                Console.WriteLine($"Leerer Ordner gelöscht: {verzeichnis}");
+                UpdateStatus($"Folder gelöscht: {verzeichnis}");
             }
             else
             {
-                // Dateien im Ordner anzeigen
-                ZeigeDateienImOrdner(verzeichnis, dateien);
+                UpdateStatus($"Folder bearbeitet: {verzeichnis}");
             }
-        }
-        catch (UnauthorizedAccessException ex)
-        {
-            Console.WriteLine($"Zugriff verweigert auf {verzeichnis}: {ex.Message}");
-        }
-        catch (IOException ex)
-        {
-            Console.WriteLine($"E/A-Fehler bei {verzeichnis}: {ex.Message}");
+
+            processedItems++;
+            UpdateProgress(processedItems, totalItems);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Allgemeiner Fehler bei {verzeichnis}: {ex.Message}");
+            UpdateStatus($"Error: {ex.Message}");
         }
     }
 
-    static void ZeigeDateienImOrdner(string ordnerPfad, string[] dateien)
+    private void UpdateProgress(int processed, int total)
     {
-        if (dateien.Length > 0)
+        if (this.InvokeRequired)
         {
-            Console.WriteLine($"Der Ordner {ordnerPfad} enthält die folgenden Dateien:");
-            foreach (string datei in dateien)
-            {
-                Console.WriteLine($"- {datei}");
-            }
+            this.Invoke(new Action(() => UpdateProgress(processed, total)));
         }
+        else
+        {
+            progressBar.Value = (int)((double)processed / total * 100);
+        }
+    }
+
+    private void UpdateStatus(string message)
+    {
+        if (this.InvokeRequired)
+        {
+            this.Invoke(new Action(() => UpdateStatus(message)));
+        }
+        else
+        {
+            statusLabel.Text = message;
+        }
+    }
+
+    [STAThread]
+    static void Main()
+    {
+        Application.EnableVisualStyles();
+        Application.Run(new Program());
     }
 }
