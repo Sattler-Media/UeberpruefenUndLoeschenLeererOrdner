@@ -8,51 +8,68 @@ class Program
         // Pfad des Hauptverzeichnisses, das überprüft werden soll
         string hauptOrdner = @"C:\Users\adrian.maldonado\Documents\C#\Bla";  // Passe diesen Pfad an dein System an
 
-        // Aufruf der Funktion, um leere Ordner zu überprüfen und zu löschen
-        UeberpruefenUndLoeschenLeererOrdner(hauptOrdner);
+        if (Directory.Exists(hauptOrdner))
+        {
+            // Aufruf der Funktion, um leere Ordner zu überprüfen und zu löschen
+            UeberpruefenUndLoeschenLeererOrdner(hauptOrdner);
+        }
+        else
+        {
+            Console.WriteLine($"Das Verzeichnis {hauptOrdner} existiert nicht.");
+        }
     }
 
     static void UeberpruefenUndLoeschenLeererOrdner(string verzeichnis)
     {
-        // Alle Unterordner im angegebenen Verzeichnis abrufen
-        string[] unterordner = Directory.GetDirectories(verzeichnis);
-
-        foreach (string unterordnerPfad in unterordner)
+        try
         {
-            try
+            // Alle Unterordner im angegebenen Verzeichnis abrufen
+            string[] unterordner = Directory.GetDirectories(verzeichnis);
+
+            foreach (string unterordnerPfad in unterordner)
             {
                 // Rekursiv alle Unterordner im aktuellen Unterordner überprüfen
                 UeberpruefenUndLoeschenLeererOrdner(unterordnerPfad);
-
-                // Alle Dateien im aktuellen Unterordner abrufen
-                string[] dateien = Directory.GetFiles(unterordnerPfad);
-
-                // Überprüfen, ob der Unterordner weder Dateien noch weitere Unterordner enthält
-                string[] unterordnerInnen = Directory.GetDirectories(unterordnerPfad);
-
-                if (dateien.Length == 0 && unterordnerInnen.Length == 0)
-                {
-                    // Leeren Ordner löschen
-                    Directory.Delete(unterordnerPfad);
-                    Console.WriteLine($"Leerer Ordner gelöscht: {unterordnerPfad}");
-                }
-                else
-                {
-                    // Wenn der Ordner Dateien enthält, diese anzeigen
-                    if (dateien.Length > 0)
-                    {
-                        Console.WriteLine($"Der Ordner {unterordnerPfad} enthält die folgenden Dateien:");
-                        foreach (string datei in dateien)
-                        {
-                            Console.WriteLine($"- {datei}");
-                        }
-                    }
-                }
             }
-            catch (Exception ex)
+
+            // Alle Dateien im aktuellen Verzeichnis abrufen
+            string[] dateien = Directory.GetFiles(verzeichnis);
+            string[] unterordnerInnen = Directory.GetDirectories(verzeichnis);
+
+            if (dateien.Length == 0 && unterordnerInnen.Length == 0)
             {
-                // Fehlerbehandlung (z. B. bei Berechtigungsproblemen)
-                Console.WriteLine($"Fehler beim Zugreifen oder Löschen des Ordners {unterordnerPfad}: {ex.Message}");
+                // Leeren Ordner löschen
+                Directory.Delete(verzeichnis);
+                Console.WriteLine($"Leerer Ordner gelöscht: {verzeichnis}");
+            }
+            else
+            {
+                // Dateien im Ordner anzeigen
+                ZeigeDateienImOrdner(verzeichnis, dateien);
+            }
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            Console.WriteLine($"Zugriff verweigert auf {verzeichnis}: {ex.Message}");
+        }
+        catch (IOException ex)
+        {
+            Console.WriteLine($"E/A-Fehler bei {verzeichnis}: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Allgemeiner Fehler bei {verzeichnis}: {ex.Message}");
+        }
+    }
+
+    static void ZeigeDateienImOrdner(string ordnerPfad, string[] dateien)
+    {
+        if (dateien.Length > 0)
+        {
+            Console.WriteLine($"Der Ordner {ordnerPfad} enthält die folgenden Dateien:");
+            foreach (string datei in dateien)
+            {
+                Console.WriteLine($"- {datei}");
             }
         }
     }
