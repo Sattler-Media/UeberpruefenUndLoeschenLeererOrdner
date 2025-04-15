@@ -8,14 +8,13 @@ class Program : Form
     private ProgressBar progressBar;
     private Label statusLabel;
     private Button startButton;
+    private int processedItems; // Declaración de la variable a nivel de clase
 
     public Program()
     {
-        
         this.Text = "Ordner-Löschen Progress:";
         this.Size = new System.Drawing.Size(400, 200);
 
-        
         progressBar = new ProgressBar();
         progressBar.Location = new System.Drawing.Point(50, 50);
         progressBar.Size = new System.Drawing.Size(300, 30);
@@ -23,14 +22,12 @@ class Program : Form
         progressBar.Maximum = 100;
         this.Controls.Add(progressBar);
 
-        
         statusLabel = new Label();
         statusLabel.Location = new System.Drawing.Point(50, 100);
         statusLabel.Size = new System.Drawing.Size(300, 30);
         statusLabel.Text = "Zum beginnen bitte drücken.";
         this.Controls.Add(statusLabel);
 
-        
         startButton = new Button();
         startButton.Text = "Beginn";
         startButton.Location = new System.Drawing.Point(150, 140);
@@ -40,10 +37,11 @@ class Program : Form
 
     private void StartButton_Click(object sender, EventArgs e)
     {
-        string hauptOrdner = @"C:\Users\adrian.maldonado\Documents\C#\Bla"; 
+        string hauptOrdner = @"C:\Users\adrian.maldonado\Documents\C#\Bla";
 
         if (Directory.Exists(hauptOrdner))
         {
+            processedItems = 0; // Reiniciar el contador antes de iniciar el proceso
             Thread processThread = new Thread(() => UeberpruefenUndLoeschenLeererOrdner(hauptOrdner));
             processThread.Start();
         }
@@ -58,7 +56,7 @@ class Program : Form
         try
         {
             string[] unterordner = Directory.GetDirectories(verzeichnis);
-            int totalItems = unterordner.Length + 1; 
+            int totalItems = unterordner.Length + 1; // Total de carpetas a procesar
 
             foreach (string unterordnerPfad in unterordner)
             {
@@ -97,7 +95,7 @@ class Program : Form
         }
         else
         {
-            progressBar.Value = (int)((double)processed / total * 100);
+            progressBar.Value = Math.Min((int)((double)processed / total * 100), 100); // Asegurar que no exceda 100
         }
     }
 
