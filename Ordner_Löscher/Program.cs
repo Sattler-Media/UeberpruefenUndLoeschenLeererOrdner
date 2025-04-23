@@ -8,11 +8,11 @@ class Program : Form
     private ProgressBar progressBar;
     private Label statusLabel;
     private Button startButton;
-    private int processedItems; // Declaración de la variable a nivel de clase
+    private int processedItems; // Deklaration der Variable auf Klassenebene
 
     public Program()
     {
-        this.Text = "Ordner-Löschen Progress:";
+        this.Text = "Ordner-Löschen Fortschritt:";
         this.Size = new System.Drawing.Size(400, 200);
 
         progressBar = new ProgressBar();
@@ -25,11 +25,11 @@ class Program : Form
         statusLabel = new Label();
         statusLabel.Location = new System.Drawing.Point(50, 100);
         statusLabel.Size = new System.Drawing.Size(300, 30);
-        statusLabel.Text = "Zum beginnen bitte drücken.";
+        statusLabel.Text = "Zum Starten bitte drücken.";
         this.Controls.Add(statusLabel);
 
         startButton = new Button();
-        startButton.Text = "Beginn";
+        startButton.Text = "Start";
         startButton.Location = new System.Drawing.Point(150, 140);
         startButton.Click += StartButton_Click;
         this.Controls.Add(startButton);
@@ -41,13 +41,13 @@ class Program : Form
 
         if (Directory.Exists(hauptOrdner))
         {
-            processedItems = 0; // Reiniciar el contador antes de iniciar el proceso
+            processedItems = 0; // Zähler vor dem Start des Prozesses zurücksetzen
             Thread processThread = new Thread(() => UeberpruefenUndLoeschenLeererOrdner(hauptOrdner));
             processThread.Start();
         }
         else
         {
-            MessageBox.Show($"Der Ordner {hauptOrdner} Existiert nicht.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show($"Der Ordner {hauptOrdner} existiert nicht.", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -56,7 +56,7 @@ class Program : Form
         try
         {
             string[] unterordner = Directory.GetDirectories(verzeichnis);
-            int totalItems = unterordner.Length + 1; // Total de carpetas a procesar
+            int totalItems = unterordner.Length + 1; // Gesamtanzahl der zu verarbeitenden Ordner
 
             foreach (string unterordnerPfad in unterordner)
             {
@@ -71,11 +71,11 @@ class Program : Form
             if (dateien.Length == 0 && unterordnerInnen.Length == 0)
             {
                 Directory.Delete(verzeichnis);
-                UpdateStatus($"Folder gelöscht: {verzeichnis}");
+                UpdateStatus($"Ordner gelöscht: {verzeichnis}");
             }
             else
             {
-                UpdateStatus($"Folder bearbeitet: {verzeichnis}");
+                UpdateStatus($"Ordner bearbeitet: {verzeichnis}");
             }
 
             processedItems++;
@@ -83,7 +83,7 @@ class Program : Form
         }
         catch (Exception ex)
         {
-            UpdateStatus($"Error: {ex.Message}");
+            UpdateStatus($"Fehler: {ex.Message}");
         }
     }
 
@@ -95,7 +95,7 @@ class Program : Form
         }
         else
         {
-            progressBar.Value = Math.Min((int)((double)processed / total * 100), 100); // Asegurar que no exceda 100
+            progressBar.Value = Math.Min((int)((double)processed / total * 100), 100); // Sicherstellen, dass der Wert 100 nicht überschreitet
         }
     }
 
